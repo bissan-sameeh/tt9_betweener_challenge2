@@ -3,6 +3,7 @@
 //     final user = userFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:tt9_betweener_challenge/models/link.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 
@@ -40,6 +41,7 @@ class UserClass {
   dynamic ip;
   dynamic long;
   dynamic lat;
+  List<Link>? links;
 
   UserClass({
     this.id,
@@ -53,6 +55,7 @@ class UserClass {
     this.ip,
     this.long,
     this.lat,
+    this.links,
   });
 
   factory UserClass.fromJson(Map<String, dynamic> json) => UserClass(
@@ -67,6 +70,9 @@ class UserClass {
         ip: json["ip"],
         long: json["long"],
         lat: json["lat"],
+        links: json["links"] == null
+            ? []
+            : List<Link>.from(json["links"]!.map((x) => Link.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -81,5 +87,8 @@ class UserClass {
         "ip": ip,
         "long": long,
         "lat": lat,
+        "links": links == null
+            ? []
+            : List<dynamic>.from(links!.map((x) => x.toJson())),
       };
 }

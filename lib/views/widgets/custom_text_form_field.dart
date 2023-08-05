@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tt9_betweener_challenge/styles.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   final String label;
   final String? hint;
   final TextEditingController? controller;
   final bool password;
+  final IconData? prefix;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final Iterable<String>? autofillHints;
@@ -17,32 +18,41 @@ class CustomTextFormField extends StatelessWidget {
       this.password = false,
       this.keyboardType,
       this.validator,
-      this.autofillHints});
+      this.autofillHints,
+      this.prefix});
 
+  @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          widget.label,
           style: Styles.textStyle14,
         ),
         const SizedBox(
           height: 12,
         ),
         TextFormField(
-          keyboardType: keyboardType,
-          controller: controller,
-          validator: validator,
-          autofillHints: autofillHints,
-          obscureText: password,
-          enableSuggestions: password == true ? false : true,
-          autocorrect: password == true ? false : true,
+          keyboardType: widget.keyboardType,
+          controller: widget.controller,
+          validator: widget.validator,
+          autofillHints: widget.autofillHints,
+          cursorColor: Colors.blue,
+          cursorHeight: 30,
+          obscureText: widget.password,
+          enableSuggestions: widget.password == true ? false : true,
+          autocorrect: widget.password == true ? false : true,
           decoration: InputDecoration(
+            prefixIcon: Icon(widget.prefix),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            hintText: hint,
+            hintText: widget.hint,
             border: Styles.primaryRoundedOutlineInputBorder,
             focusedBorder: Styles.primaryRoundedOutlineInputBorder,
             errorBorder: Styles.primaryRoundedOutlineInputBorder,

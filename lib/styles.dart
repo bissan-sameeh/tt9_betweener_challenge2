@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tt9_betweener_challenge/constants.dart';
 
-abstract class Styles {
+mixin class Styles {
+  getColor({required Color color}) {
+    return color;
+  }
+
   static OutlineInputBorder primaryRoundedOutlineInputBorder =
       OutlineInputBorder(
-    borderRadius: BorderRadius.circular(12),
-    borderSide: const BorderSide(
-      color: kPrimaryColor,
-      width: 2,
-    ),
-  );
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Colors.grey));
 
   static const textStyle14 = TextStyle(
     fontSize: 14,

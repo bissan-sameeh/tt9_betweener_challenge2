@@ -15,14 +15,16 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  late Future<User> user;
+  late Future<User>
+      user; //late because we not decompose the data yet ! and the same type of data returned of getLocalUser func.
   late Future<List<Link>> links;
 
   @override
   void initState() {
-    user = getLocalUser();
-    links = getLinks(context);
     super.initState();
+    user =
+        getLocalUser(); //her we call the function and assigned it to the same type of data Future <user>
+    links = getLinks(context);
   }
 
   @override
@@ -31,7 +33,8 @@ class _HomeViewState extends State<HomeView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FutureBuilder(
-          future: user,
+          future:
+              user, //her instead use fun getLocalUser and each time we rebuild it will turned on again we keep the data and such as use then her
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Text('Welcome ${snapshot.data?.user?.name}');

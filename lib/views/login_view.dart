@@ -35,10 +35,14 @@ class _LoginViewState extends State<LoginView> {
       };
 
       login(body).then((user) async {
+        //datatype returned from future is object fr
         //save user locally
         final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user', userToJson(user));
-
+        await prefs.setString(
+            'user',
+            userToJson(
+                user)); //what datatype want to store in  SharedPreferences (here string) ,the key is user and value object so we converted it to String
+        //store user in SharedPreferences
         if (mounted) {
           Navigator.pushNamed(context, MainAppView.id);
         }
@@ -46,6 +50,8 @@ class _LoginViewState extends State<LoginView> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(err.toString()),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(12),
         ));
       });
 

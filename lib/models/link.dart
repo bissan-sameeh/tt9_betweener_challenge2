@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:tt9_betweener_challenge/models/user.dart';
+
 Link linkFromJson(String str) => Link.fromJson(json.decode(str));
 
 String linkToJson(Link data) => json.encode(data.toJson());
@@ -17,6 +19,7 @@ class Link {
   int? userId;
   String? createdAt;
   String? updatedAt;
+  User? user;
 
   Link({
     this.id,
@@ -27,6 +30,7 @@ class Link {
     this.userId,
     this.createdAt,
     this.updatedAt,
+    this.user,
   });
 
   factory Link.fromJson(Map<String, dynamic> json) => Link(
@@ -38,6 +42,7 @@ class Link {
         userId: json["user_id"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
+        user: json["user"] == null ? null : User.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -49,5 +54,6 @@ class Link {
         "user_id": userId,
         "created_at": createdAt,
         "updated_at": updatedAt,
+        "user": user?.toJson(),
       };
 }
