@@ -51,7 +51,7 @@ class _LoginViewState extends State<LoginView> {
           content: Text(err.toString()),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(12),
+          margin: const EdgeInsets.all(12),
         ));
       });
 

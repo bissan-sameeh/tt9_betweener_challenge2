@@ -5,22 +5,26 @@ import 'package:tt9_betweener_challenge/views/widgets/custom_text_form_field.dar
 import 'package:tt9_betweener_challenge/views/widgets/my-button_widget.dart';
 
 import '../controllers/add_new_link.dart';
+import '../controllers/edit_link_controller.dart';
+import '../models/link.dart';
 
-class AddLinkView extends StatefulWidget {
-  static const id = "/AddLinkView";
+class EditeView extends StatefulWidget {
+  static const id = "/editView";
+  const EditeView({super.key});
 
   @override
-  State<AddLinkView> createState() => _AddLinkViewState();
+  State<EditeView> createState() => _EditeViewState();
 }
 
-class _AddLinkViewState extends State<AddLinkView> {
+class _EditeViewState extends State<EditeView> {
   late TextEditingController titleController;
-
+  late int linkId;
   late TextEditingController linkController;
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     titleController = TextEditingController();
     linkController = TextEditingController();
@@ -34,16 +38,16 @@ class _AddLinkViewState extends State<AddLinkView> {
     super.dispose();
   }
 
-  addLink() {
+  getLinkData() {}
+  editLinkUser() {
     if (_formKey.currentState!.validate()) {
       final body = {
         'title': titleController.text,
         'link': linkController.text,
       };
-      addNewLink(context, body).then((checkData) {
-        print(checkData);
-        if (mounted && checkData == true) {
-          Navigator.pop(context);
+      editLink(userId: linkId, body: body).then((checkEdit) {
+        if (checkEdit == true && mounted) {
+          Navigator.pop(context, checkEdit);
         }
       }).catchError((err) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -58,6 +62,11 @@ class _AddLinkViewState extends State<AddLinkView> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as List;
+    titleController.text = args[0];
+    linkController.text = args[1];
+    linkId = args[2];
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -70,7 +79,6 @@ class _AddLinkViewState extends State<AddLinkView> {
                 CustomTextFormField(
                   label: 'Title',
                   controller: titleController,
-                  hint: 'snapshot',
                   prefix: Icons.text_fields,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -84,7 +92,6 @@ class _AddLinkViewState extends State<AddLinkView> {
                 ),
                 CustomTextFormField(
                   controller: linkController,
-                  hint: 'Enter your Link',
                   prefix: Icons.link,
                   label: 'link',
                   validator: (value) {
@@ -98,8 +105,8 @@ class _AddLinkViewState extends State<AddLinkView> {
                   height: 24.h,
                 ),
                 MyButton(
-                  text: 'Add',
-                  onTap: addLink,
+                  text: 'Edit',
+                  onTap: editLinkUser,
                 ),
               ],
             ),

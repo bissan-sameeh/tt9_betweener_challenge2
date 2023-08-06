@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tt9_betweener_challenge/views/add_link_view.dart';
+import 'package:tt9_betweener_challenge/views/edit_view.dart';
 import 'package:tt9_betweener_challenge/views/home_view.dart';
 import 'package:tt9_betweener_challenge/views/loading_view.dart';
 import 'package:tt9_betweener_challenge/views/login_view.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
               MainAppView.id: (context) => const MainAppView(),
               ProfileView.id: (context) => const ProfileView(),
               ReceiveView.id: (context) => const ReceiveView(),
+              EditeView.id: (context) => const EditeView(),
             },
           );
         });

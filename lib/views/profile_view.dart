@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tt9_betweener_challenge/controllers/link_controller.dart';
 import 'package:tt9_betweener_challenge/models/link.dart';
 import 'package:tt9_betweener_challenge/views/add_link_view.dart';
+
+import '../constants.dart';
+import '../controllers/delete_link_controller.dart';
+import 'edit_view.dart';
 
 class ProfileView extends StatefulWidget {
   static String id = '/profileView';
@@ -19,11 +24,8 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     links = getLinks(context);
-
     super.initState();
   }
-
-  updateUi() {}
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +54,9 @@ class _ProfileViewState extends State<ProfileView> {
             child: Row(
               children: [
                 CircleAvatar(
-                  child: Icon(Icons.person, size: 45, color: Color(0xff2D2B4E)),
                   radius: 45.r,
+                  child: const Icon(Icons.person,
+                      size: 45, color: Color(0xff2D2B4E)),
                 ),
                 SizedBox(
                   width: 16.w,
@@ -116,19 +119,70 @@ class _ProfileViewState extends State<ProfileView> {
             future: links,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
               return Expanded(
                 child: ListView.builder(
                     itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 24),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: const Color(0xffFEE2E7)),
-                        child: Text(snapshot.data![index].title!),
+                      return Slidable(
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            buildSlidableAction(
+                                icon: Icons.delete,
+                                color: kSecondaryColor,
+                                function: (check) {
+                                  final body = {
+                                    'title': snapshot.data![index].title,
+                                    'link': snapshot.data![index].link
+                                  };
+                                  deleteLink(
+                                          body: body,
+                                          userId: snapshot.data![index].id)
+                                      .then((value) {
+                                    if (value == true) {
+                                      setState(() {
+                                        links = getLinks(context);
+                                      });
+                                    }
+                                  });
+                                }),
+                            buildSlidableAction(
+                                icon: Icons.edit,
+                                color: kDangerColor,
+                                function: (check) {
+                                  Navigator.pushNamed(context, EditeView.id,
+                                      arguments: [
+                                        snapshot.data![index].title,
+                                        snapshot.data![index].link,
+                                        snapshot.data![index].id,
+                                      ]).then((checkData) {
+                                    final result = checkData;
+                                    if (result == true) {
+                                      setState(() {
+                                        links = getLinks(context);
+                                      });
+                                    }
+                                  });
+                                }),
+                          ],
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.only(bottom: 24),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: const Color(0xffFEE2E7)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(snapshot.data![index].title!),
+                              Text(snapshot.data![index].link!),
+                            ],
+                          ),
+                        ),
                       );
                     }),
               );
@@ -163,6 +217,18 @@ class _ProfileViewState extends State<ProfileView> {
           )
         ],
       ),
+    );
+  }
+
+  SlidableAction buildSlidableAction(
+      {required IconData icon,
+      required Color color,
+      Function(dynamic)? function}) {
+    return SlidableAction(
+      borderRadius: BorderRadius.circular(15),
+      onPressed: function,
+      icon: icon,
+      backgroundColor: color,
     );
   }
 
